@@ -15,14 +15,15 @@ dạng EPG mẫu: `ID / Ngày / Thời gian bắt đầu / Thời lượng / Tê
 ├── SKILL.md                       # Mo ta skill cho OpenClaw (huong dan su dung chi tiet)
 ├── scripts/
 │   ├── fetch_tv_schedule.py       # Cao lich + xuat file .xls moi kenh
-│   └── cleanup_old_output.py      # Xoa thu muc output cu hon N ngay
+│   ├── cleanup_old_output.py      # Xoa thu muc output cu hon N ngay
+│   └── sort_xls_by_time.py        # Sap xep lai 1 file .xls da xuat theo ngay/gio tang dan
 └── output/                        # (khong commit) ket qua chay, 1 thu muc con moi ngay YYYY-MM-DD
 ```
 
 ## Cài đặt
 
 ```bash
-pip install --break-system-packages requests beautifulsoup4 xlwt
+pip install --break-system-packages requests beautifulsoup4 xlwt xlrd
 ```
 
 ## Sử dụng
@@ -38,6 +39,13 @@ Tham số:
 - `--limit N` (chỉ với `fetch_tv_schedule.py`) — giới hạn số kênh, dùng để test nhanh.
 - `--delay` — độ trễ (giây) giữa các request tới baomoi.com (mặc định 0.7s).
 - `--days` (chỉ với `cleanup_old_output.py`) — số ngày giữ lại trước khi xoá (mặc định 7).
+
+Nếu một file `.xls` đã xuất ra có thứ tự dòng chưa đúng ngày/giờ tăng dần (ví dụ file
+cũ, hoặc nghi ngờ dữ liệu bị lệch), sắp xếp lại ngay trên file đó mà không cần cào lại:
+```bash
+python3 scripts/sort_xls_by_time.py --file "output/2026-08-25/VTV1 (HD)EPG25082026.xls"
+```
+Mặc định ghi đè lên chính file đó; dùng `--output <file_khac>.xls` nếu muốn ghi ra file mới.
 
 ## Đầu ra
 
