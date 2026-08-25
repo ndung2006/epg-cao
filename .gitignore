@@ -1,0 +1,9 @@
+# Ket qua chay hang ngay - khong phai ma nguon, khong commit
+output/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
