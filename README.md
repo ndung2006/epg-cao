@@ -46,7 +46,10 @@ Mỗi lần chạy tạo `output/<YYYY-MM-DD>/<Tên kênh>EPG<ddMMyyyy>.xls`, v�
 
 Mỗi file gồm 1 sheet, 3 dòng đầu để trống, dòng 4 là tiêu đề, từ dòng 5 là dữ
 liệu với 5 cột: `ID`, `Ngày`, `Thời gian bắt đầu`, `Thời lượng`, `Tên chương trình`.
-Font Arial 12, không in đậm, độ rộng cột khớp với file EPG mẫu gốc.
+Font Arial 12, không in đậm, độ rộng cột khớp với file EPG mẫu gốc. Cột `Ngày`,
+`Thời gian bắt đầu`, `Thời lượng` được ghi là giá trị ngày/giờ thật của Excel
+(không phải text) nên sắp xếp tăng dần trong Excel sẽ đúng theo thứ tự thời gian
+thực tế (00:00:00 → 23:59:59), không bị sai do so sánh chuỗi ký tự.
 
 ## Chạy tự động hàng ngày (cron, không tốn token AI)
 
@@ -55,8 +58,12 @@ dùng `crontab` của hệ điều hành (không dùng cron kiểu agent của O
 thẳng 2 script trên mỗi ngày — không tốn token vì không đi qua AI.
 
 Hiện đã thiết lập trên máy chạy OpenClaw (WSL Ubuntu) tại:
-`~/.openclaw/workspace/skills/lich-truyen-hinh-baomoi/scripts/`, chạy lúc 6:00
-(lấy lịch) và 6:10 (dọn dẹp thư mục cũ hơn 7 ngày) hàng ngày.
+`~/.openclaw/workspace/skills/lich-truyen-hinh-baomoi/scripts/`, chạy lúc 00:05
+giờ Việt Nam (tức 17:05 giờ GMT/UTC ngày hôm trước) để lấy lịch, và 10 phút sau
+đó để dọn dẹp thư mục cũ hơn 7 ngày. Chạy gần nửa đêm là bắt buộc: trang baomoi
+chỉ trả về lịch bắt đầu từ chương trình đang phát sóng tại thời điểm cào (không
+phải từ 00:00:00), nên chạy càng trễ trong ngày thì file càng thiếu mất đoạn đầu
+ngày. Xem chi tiết dòng cron theo múi giờ hệ thống trong `SKILL.md`.
 
 ## Ghi chú kỹ thuật
 

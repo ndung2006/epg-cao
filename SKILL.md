@@ -60,14 +60,31 @@ Mở crontab:
 crontab -e
 ```
 
-Thêm 2 dòng sau (đường dẫn ví dụ, sửa lại cho khớp máy bạn):
+Lịch chạy: **00:05 giờ Việt Nam (UTC+7)** mỗi ngày — tức **17:05 giờ GMT (UTC) ngày hôm trước**.
+
+Lưu ý quan trọng: trang baomoi luôn trả về lịch phát sóng bắt đầu từ chương trình **đang phát
+sóng tại thời điểm cào** (theo giờ thực), không phải từ 00:00:00 của ngày. Vì vậy phải chạy
+script vào lúc **gần nửa đêm nhất có thể (00:05 giờ VN)** thì file mới có dữ liệu liên tục gần
+như trọn vẹn từ 00:00:00 đến hết ngày; chạy trễ hơn (vd 6:00 sáng) sẽ luôn bị thiếu mất đoạn đầu
+ngày vì baomoi không cung cấp lại dữ liệu đã qua trong ngày.
+
+Giờ trong crontab luôn theo múi giờ hệ thống của máy chạy cron, nên chọn đúng dòng bên dưới theo
+múi giờ máy đó (kiểm tra bằng `timedatectl` hoặc `date`):
+
+Nếu máy đặt giờ hệ thống là **UTC/GMT**:
 ```
-0 6 * * * /usr/bin/python3 /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/fetch_tv_schedule.py --output-dir /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/output >> /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/cron.log 2>&1
-10 6 * * * /usr/bin/python3 /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/cleanup_old_output.py --output-dir /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/output --days 7 >> /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/cleanup.log 2>&1
+5 17 * * * /usr/bin/python3 /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/fetch_tv_schedule.py --output-dir /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/output >> /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/cron.log 2>&1
+15 17 * * * /usr/bin/python3 /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/cleanup_old_output.py --output-dir /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/output --days 7 >> /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/cleanup.log 2>&1
 ```
 
-Dòng đầu: 6:00 sáng mỗi ngày lấy lịch mới, xuất vào `output/<YYYY-MM-DD>/`.
-Dòng thứ hai: 6:10 sáng (sau khi lấy lịch xong 10 phút), tự xoá các thư mục `output/<YYYY-MM-DD>/` đã cũ hơn 7 ngày.
+Nếu máy đặt giờ hệ thống là **giờ Việt Nam (UTC+7)** (trường hợp phổ biến với WSL Ubuntu mặc định):
+```
+5 0 * * * /usr/bin/python3 /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/fetch_tv_schedule.py --output-dir /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/output >> /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/cron.log 2>&1
+15 0 * * * /usr/bin/python3 /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/cleanup_old_output.py --output-dir /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/output --days 7 >> /home/openclaw/.openclaw/skills/lich-truyen-hinh-baomoi/scripts/cleanup.log 2>&1
+```
+
+Dòng đầu: 00:05 giờ VN (17:05 GMT hôm trước) mỗi ngày lấy lịch mới, xuất vào `output/<YYYY-MM-DD>/`.
+Dòng thứ hai: 10 phút sau (sau khi lấy lịch xong), tự xoá các thư mục `output/<YYYY-MM-DD>/` đã cũ hơn 7 ngày.
 
 Kiểm tra đã lưu đúng chưa:
 ```bash
@@ -84,6 +101,7 @@ python3 scripts/cleanup_old_output.py --output-dir ./output --days 7
 
 - Thư mục `output/<YYYY-MM-DD>/` chứa N file `.xls` (N = số kênh lấy được lịch thành công), định dạng nhị phân Excel 97-2003 chuẩn (không phải `.xlsx` đổi tên).
 - Mỗi file có đúng 1 sheet, cấu trúc: 3 dòng đầu để trống, dòng 4 là tiêu đề (`ID`, `Ngày`, `Thời gian bắt đầu`, `Thời lượng`, `Tên chương trình`), từ dòng 5 trở đi là dữ liệu theo thứ tự thời gian.
+- Cột `Ngày`, `Thời gian bắt đầu`, `Thời lượng` là giá trị ngày/giờ thật của Excel (không phải chuỗi text), để khi sắp xếp tăng dần trong Excel luôn đúng thứ tự thời gian thực tế (00:00:00 → 23:59:59), không bị sai do so sánh ký tự.
 - Tên file: `<Tên kênh>EPG<ddMMyyyy>.xls`, ví dụ `VTV1 (HD)EPG20082026.xls`, `Bắc NinhEPG20082026.xls`.
 
 ## Ràng buộc an toàn / lưu ý

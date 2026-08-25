@@ -156,24 +156,30 @@ def build_epg_rows(schedule_pairs, base_date: datetime.date):
     return rows
 
 
-def format_timedelta(td: datetime.timedelta) -> str:
-    total_seconds = int(td.total_seconds())
-    h = total_seconds // 3600
-    m = (total_seconds % 3600) // 60
-    s = total_seconds % 60
-    return f"{h:02d}:{m:02d}:{s:02d}"
-
-
 def write_xls(path: Path, epg_rows):
     """Ghi file .xls chuan (Excel 97-2003) dung cau truc: 3 dong trong, 1 dong tieu de,
     cac cot ID / Ngay / Thoi gian bat dau / Thoi luong / Ten chuong trinh.
     Font, do rong cot deu duoc dat khop voi file EPG mau (Arial 12, General format,
-    khong bold, khong border)."""
+    khong bold, khong border).
+
+    Cot Ngay / Thoi gian bat dau / Thoi luong duoc ghi la gia tri ngay-gio thuc su
+    cua Excel (khong phai chuoi text) de sap xep tang dan dung thu tu thoi gian
+    (00:00:00 -> 23:59:59), thay vi bi sap xep sai theo kieu so sanh chuoi ky tu."""
     wb = xlwt.Workbook(encoding="utf-8")
     ws = wb.add_sheet("Sheet1")
 
-    # Font/style giong file mau: Arial, cao 240 twips (=12pt), khong bold, dinh dang General
+    # Font/style giong file mau: Arial, cao 240 twips (=12pt), khong bold
     plain_style = xlwt.easyxf("font: name Arial, height 240, bold off")
+    datetime_style = xlwt.easyxf(
+        "font: name Arial, height 240, bold off", num_format_str="M/D/YYYY hh:mm:ss"
+    )
+    time_style = xlwt.easyxf(
+        "font: name Arial, height 240, bold off", num_format_str="hh:mm:ss"
+    )
+    # [h] cho phep hien thi qua 24 gio (vd chuong trinh cuoi ngay keo dai nhieu gio)
+    duration_style = xlwt.easyxf(
+        "font: name Arial, height 240, bold off", num_format_str="[h]:mm:ss"
+    )
 
     # Do rong cot (don vi 1/256 ky tu) lay dung theo file mau
     col_widths = [2773, 5333, 5333, 5333, 38613]
@@ -188,9 +194,9 @@ def write_xls(path: Path, epg_rows):
     for i, row in enumerate(epg_rows):
         r = header_row_idx + 1 + i
         ws.write(r, 0, row["id"], plain_style)
-        ws.write(r, 1, row["start_dt"].strftime("%m/%d/%Y %H:%M:%S"), plain_style)
-        ws.write(r, 2, row["start_dt"].strftime("%H:%M:%S"), plain_style)
-        ws.write(r, 3, format_timedelta(row["duration"]), plain_style)
+        ws.write(r, 1, row["start_dt"], datetime_style)
+        ws.write(r, 2, row["start_dt"].time(), time_style)
+        ws.write(r, 3, row["duration"].total_seconds() / 86400, duration_style)
         ws.write(r, 4, row["program"], plain_style)
 
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -198,6 +204,13 @@ def write_xls(path: Path, epg_rows):
 
 
 def main():
+    # Console Windows mac dinh dung bang ma cp1252, khong ma hoa duoc nhieu ky tu
+    # tieng Viet -> ep stdout/stderr sang UTF-8 de tranh crash UnicodeEncodeError
+    # khi in ten kenh/thong bao loi co dau.
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", default="./output", help="Thu muc de luu file .xls")
     parser.add_argument("--limit", type=int, default=None, help="Gioi han so kenh (de test nhanh)")
