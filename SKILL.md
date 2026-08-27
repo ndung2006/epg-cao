@@ -29,7 +29,7 @@ Lưu ý: dùng `xlwt` (không dùng `openpyxl`) vì output phải là file `.xls
    - Tải trang `https://baomoi.com/tien-ich-lich-truyen-hinh.epi`.
    - Tìm toàn bộ danh sách kênh (mọi thẻ `<a>` có href khớp mẫu `tien-ich-lich-truyen-hinh-<slug>.epi`), cộng thêm chính trang gốc (kênh mặc định, thường là VTV1).
    - Với từng kênh, tải trang lịch phát sóng riêng của kênh đó và tách bảng gồm 2 cột: **Giờ** và **Chương trình**.
-   - Gán ngày thực tế cho từng dòng (tự phát hiện khi giờ vòng qua nửa đêm để tăng ngày lên 1), và tính **Thời lượng** = khoảng cách tới chương trình kế tiếp (dòng cuối cùng tính đến hết ngày, 24:00:00).
+   - Trang baomoi hiển thị lịch của đúng 1 ngày (ngày cào) nhưng theo thứ tự "sắp/đang phát trước, đã phát sóng sáng cùng ngày đó sau" — script gán cùng 1 ngày cho toàn bộ dữ liệu rồi sắp xếp lại theo giờ tăng dần, và tính **Thời lượng** = khoảng cách tới chương trình kế tiếp trong danh sách đã sắp xếp (dòng cuối cùng tính đến hết ngày, 24:00:00).
    - Ghi lịch của từng kênh thành 1 file `.xls` riêng, đúng cấu trúc file mẫu: 3 dòng đầu để trống, dòng thứ 4 là tiêu đề, từ dòng thứ 5 là dữ liệu, gồm 5 cột **ID / Ngày / Thời gian bắt đầu / Thời lượng / Tên chương trình**.
    - Đặt tên file theo đúng mẫu: `<Tên kênh>EPG<ddMMyyyy>.xls` (ví dụ: `VTV1 (HD)EPG20082026.xls`), giữ nguyên dấu tiếng Việt và khoảng trắng trong tên kênh, chỉ lọc bỏ các ký tự không hợp lệ trên Windows (`\ / : * ? " < > |`).
    - Lưu vào thư mục con theo ngày dạng `YYYY-MM-DD` bên trong thư mục output: `output/<YYYY-MM-DD>/<Tên kênh>EPG<ddMMyyyy>.xls`.
@@ -62,11 +62,12 @@ crontab -e
 
 Lịch chạy: **00:05 giờ Việt Nam (UTC+7)** mỗi ngày — tức **17:05 giờ GMT (UTC) ngày hôm trước**.
 
-Lưu ý quan trọng: trang baomoi luôn trả về lịch phát sóng bắt đầu từ chương trình **đang phát
-sóng tại thời điểm cào** (theo giờ thực), không phải từ 00:00:00 của ngày. Vì vậy phải chạy
-script vào lúc **gần nửa đêm nhất có thể (00:05 giờ VN)** thì file mới có dữ liệu liên tục gần
-như trọn vẹn từ 00:00:00 đến hết ngày; chạy trễ hơn (vd 6:00 sáng) sẽ luôn bị thiếu mất đoạn đầu
-ngày vì baomoi không cung cấp lại dữ liệu đã qua trong ngày.
+Lưu ý: trang baomoi luôn hiển thị đủ lịch của **cả ngày hôm đó** (00:00:00 → 23:59:59), bất kể
+cào vào lúc nào trong ngày — không cần chạy đúng gần nửa đêm mới lấy được đủ dữ liệu. Trang chỉ
+liệt kê theo thứ tự "sắp/đang phát trước, đã phát sóng sáng cùng ngày sau" thay vì theo giờ tăng
+dần, và `fetch_tv_schedule.py` đã tự sắp xếp lại đúng thứ tự trước khi ghi file. Giờ chạy 00:05
+VN ở đây chỉ là lựa chọn thời điểm ít ảnh hưởng traffic ban ngày, có thể đổi sang giờ khác nếu
+muốn mà không ảnh hưởng tới độ đầy đủ của dữ liệu.
 
 Giờ trong crontab luôn theo múi giờ hệ thống của máy chạy cron, nên chọn đúng dòng bên dưới theo
 múi giờ máy đó (kiểm tra bằng `timedatectl` hoặc `date`):

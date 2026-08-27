@@ -7,12 +7,13 @@ Doc lai 1 file .xls EPG da xuat ra (dung cau truc: 3 dong trong, 1 dong tieu de,
 cac dong du lieu, danh lai ID theo thu tu moi, roi ghi de (hoac ghi ra file khac)
 - khong can cao lai du lieu tu baomoi.com.
 
-Vi baomoi.com luon tra ve lich bat dau tu thoi diem cao (khong phai tu 00:00),
-du lieu mot file thuong vat qua 2 ngay lich (vd 10:40 hom nay -> 10:35 hom sau).
-Mac dinh script sap xep theo GIO TRONG NGAY (bo qua ngay), de cot "Thoi gian bat
-dau" chay lien tuc 00:00:00 -> 23:59:59 trong 1 file, dua doan "00:00 tro di"
-(thuoc ngay hom sau) len dau. Dung --absolute neu muon giu thu tu ngay-gio thuc
-(khong doi cho, chi sap xep lai neu du lieu bi dao lon).
+fetch_tv_schedule.py (ban moi) da gan dung 1 ngay va sap xep tang dan ngay khi
+cao, nen voi file moi thi script nay thuong khong doi gi. Huu ich chu yeu de
+sua lai cac file cu (tu ban script truoc khi fix, co the bi gan sai sang ngay
+hom sau) hoac khi nghi ngo 1 file bi dao lon thu tu. Mac dinh sap xep theo GIO
+TRONG NGAY (bo qua ngay) de cot "Thoi gian bat dau" chay lien tuc 00:00:00 ->
+23:59:59. Dung --absolute neu muon sap theo dung ngay-gio dang ghi trong file
+(khong quy tat ca ve 1 ngay).
 
 Ho tro doc ca file cu (cot Ngay/Thoi luong la text) lan file moi (da la kieu
 ngay/gio thuc cua Excel).

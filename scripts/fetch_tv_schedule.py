@@ -123,27 +123,28 @@ def parse_schedule(html: str):
 
 def build_epg_rows(schedule_pairs, base_date: datetime.date):
     """
-    Gan ngay thuc te cho tung dong (xu ly qua dem khi gio bi lap lai/nho hon dong truoc),
-    tinh 'Thoi luong' = khoang cach den chuong trinh ke tiep (dong cuoi tinh den het ngay).
-    Tra ve list dict: id, start_dt (datetime), duration (timedelta), program (str).
-    """
-    parsed_times = []
-    current_date = base_date
-    prev_dt = None
+    Trang baomoi hien thi lich cua DUY NHAT 1 ngay (hom nay), nhung theo thu tu
+    "sap phat truoc, da phat sau" (vd 14:00 -> 23:30 roi 00:00 -> 13:30), khong
+    phai theo gio tang dan, va khong he lien quan toi ngay hom sau. Vi vay gan
+    CUNG 1 ngay (base_date) cho moi dong, roi sap xep lai theo gio tang dan de
+    co danh sach 00:00:00 -> 23:59:59 lien tuc dung 1 ngay.
 
-    for time_text, _program in schedule_pairs:
+    Tinh 'Thoi luong' = khoang cach den chuong trinh ke tiep (dong cuoi tinh den
+    het ngay, 24:00:00). Tra ve list dict: id, start_dt (datetime),
+    duration (timedelta), program (str).
+    """
+    entries = []
+    for time_text, program in schedule_pairs:
         hh, mm = map(int, time_text.split(":"))
-        dt = datetime.datetime(current_date.year, current_date.month, current_date.day, hh, mm, 0)
-        if prev_dt is not None and dt <= prev_dt:
-            current_date = current_date + datetime.timedelta(days=1)
-            dt = datetime.datetime(current_date.year, current_date.month, current_date.day, hh, mm, 0)
-        parsed_times.append(dt)
-        prev_dt = dt
+        dt = datetime.datetime(base_date.year, base_date.month, base_date.day, hh, mm, 0)
+        entries.append((dt, program))
+
+    entries.sort(key=lambda entry: entry[0])
 
     rows = []
-    for i, (dt, (_time_text, program)) in enumerate(zip(parsed_times, schedule_pairs)):
-        if i + 1 < len(parsed_times):
-            duration = parsed_times[i + 1] - dt
+    for i, (dt, program) in enumerate(entries):
+        if i + 1 < len(entries):
+            duration = entries[i + 1][0] - dt
         else:
             next_midnight = datetime.datetime(dt.year, dt.month, dt.day) + datetime.timedelta(days=1)
             duration = next_midnight - dt

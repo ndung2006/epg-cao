@@ -68,16 +68,21 @@ thẳng 2 script trên mỗi ngày — không tốn token vì không đi qua AI.
 Hiện đã thiết lập trên máy chạy OpenClaw (WSL Ubuntu) tại:
 `~/.openclaw/workspace/skills/lich-truyen-hinh-baomoi/scripts/`, chạy lúc 00:05
 giờ Việt Nam (tức 17:05 giờ GMT/UTC ngày hôm trước) để lấy lịch, và 10 phút sau
-đó để dọn dẹp thư mục cũ hơn 7 ngày. Chạy gần nửa đêm là bắt buộc: trang baomoi
-chỉ trả về lịch bắt đầu từ chương trình đang phát sóng tại thời điểm cào (không
-phải từ 00:00:00), nên chạy càng trễ trong ngày thì file càng thiếu mất đoạn đầu
-ngày. Xem chi tiết dòng cron theo múi giờ hệ thống trong `SKILL.md`.
+đó để dọn dẹp thư mục cũ hơn 7 ngày. Giờ chạy cụ thể không bắt buộc phải gần nửa
+đêm — trang baomoi luôn trả về đủ lịch của cả ngày hôm đó (00:00:00 → 23:59:59)
+bất kể cào vào lúc nào, chỉ khác là thứ tự hiển thị trên trang là "sắp phát trước,
+đã phát sau" (script đã tự sắp lại theo giờ tăng dần). Xem chi tiết dòng cron
+theo múi giờ hệ thống trong `SKILL.md`.
 
 ## Ghi chú kỹ thuật
 
 - Danh sách kênh được tự động phát hiện từ các link trên trang gốc (không hardcode),
   lọc trùng theo tên kênh.
-- Vì lịch trên baomoi có thể vắt qua nửa đêm, script tự nhận diện mốc giờ quay
-  vòng để gán đúng ngày cho từng dòng và tính "Thời lượng" so với chương trình kế tiếp.
+- Trang baomoi hiển thị lịch của đúng 1 ngày (ngày cào), nhưng theo thứ tự
+  "chương trình sắp/đang phát trước, chương trình đã phát sóng sáng cùng ngày đó
+  sau" — không phải theo giờ tăng dần và không liên quan tới ngày hôm sau. Script
+  gán cùng 1 ngày cho toàn bộ dữ liệu rồi sắp xếp lại theo giờ tăng dần trước khi
+  ghi ra file, và tính "Thời lượng" so với chương trình kế tiếp trong danh sách
+  đã sắp xếp.
 - `output/` không nên commit vào git (xem `.gitignore`) vì đây là dữ liệu sinh ra
   mỗi ngày, không phải mã nguồn.
