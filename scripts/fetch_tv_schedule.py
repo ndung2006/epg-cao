@@ -129,9 +129,10 @@ def build_epg_rows(schedule_pairs, base_date: datetime.date):
     CUNG 1 ngay (base_date) cho moi dong, roi sap xep lai theo gio tang dan de
     co danh sach 00:00:00 -> 23:59:59 lien tuc dung 1 ngay.
 
-    Tinh 'Thoi luong' = khoang cach den chuong trinh ke tiep (dong cuoi tinh den
-    het ngay, 24:00:00). Tra ve list dict: id, start_dt (datetime),
-    duration (timedelta), program (str).
+    Tinh 'Thoi luong' = khoang cach den chuong trinh ke tiep (dong cuoi cat tai
+    23:59:59 cua CUNG ngay do - moi ngay la 1 khoi rieng biet, khong de thoi
+    luong cham sang 00:00:00 ngay hom sau). Tra ve list dict: id,
+    start_dt (datetime), duration (timedelta), program (str).
     """
     entries = []
     for time_text, program in schedule_pairs:
@@ -146,8 +147,8 @@ def build_epg_rows(schedule_pairs, base_date: datetime.date):
         if i + 1 < len(entries):
             duration = entries[i + 1][0] - dt
         else:
-            next_midnight = datetime.datetime(dt.year, dt.month, dt.day) + datetime.timedelta(days=1)
-            duration = next_midnight - dt
+            end_of_day = datetime.datetime(dt.year, dt.month, dt.day, 23, 59, 59)
+            duration = end_of_day - dt
         rows.append({
             "id": i + 1,
             "start_dt": dt,
