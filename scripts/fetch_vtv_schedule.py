@@ -36,7 +36,14 @@ from pathlib import Path
 import requests
 from bs4 import BeautifulSoup
 
-from fetch_tv_schedule import write_xls, safe_filename_part
+from fetch_tv_schedule import (
+    write_xls,
+    safe_filename_part,
+    discover_channels,
+    fetch as baomoi_fetch,
+    parse_schedule as baomoi_parse_schedule,
+    build_epg_rows as baomoi_build_epg_rows,
+)
 
 # (ten kenh xuat ra file, vi tri (0-based) trong 12 danh sach <ul class="programs">
 # tren trang, dung theo thu tu bo chon kenh: VTV1,2,3,4,5,5TNB,5TN,6,7,8,9,CanTho)
@@ -49,6 +56,12 @@ CHANNELS = [
     ("VTV9", 10),
     ("VTV10", 11),  # VTV10 chinh la VTV Can Tho
 ]
+
+# Kenh nao vtv.vn khong co du lieu thi tam thoi lay lai tu baomoi.com
+# (ten kenh xuat file -> ten kenh tren baomoi.com)
+FALLBACK_BAOMOI = {
+    "VTV9": "VTV9",
+}
 
 HEADERS = {
     "User-Agent": (
@@ -174,6 +187,8 @@ def main():
         print(f"LOI: khong the tai trang vtv.vn: {e}", file=sys.stderr)
         sys.exit(1)
 
+    baomoi_channels_by_name = None  # tai luoi, chi khi can fallback
+
     success = []
     failures = []
     for idx, (channel_name, list_index) in enumerate(CHANNELS, start=1):
@@ -193,8 +208,35 @@ def main():
             success.append((channel_name, file_path, len(epg_rows)))
             print(f"[{idx}/{len(CHANNELS)}] OK  - {channel_name}: {len(epg_rows)} muc lich -> {file_path}")
         except Exception as e:  # noqa: BLE001
-            failures.append((channel_name, str(e)))
-            print(f"[{idx}/{len(CHANNELS)}] LOI - {channel_name}: {e}", file=sys.stderr)
+            baomoi_name = FALLBACK_BAOMOI.get(channel_name)
+            if not baomoi_name:
+                failures.append((channel_name, str(e)))
+                print(f"[{idx}/{len(CHANNELS)}] LOI - {channel_name}: {e}", file=sys.stderr)
+                continue
+            try:
+                if baomoi_channels_by_name is None:
+                    baomoi_channels_by_name = {
+                        name: url for url, name in discover_channels(session)
+                    }
+                url = baomoi_channels_by_name.get(baomoi_name)
+                if not url:
+                    raise ValueError(f"khong tim thay '{baomoi_name}' tren baomoi.com")
+                html = baomoi_fetch(session, url)
+                baomoi_schedule = baomoi_parse_schedule(html)
+                if not baomoi_schedule:
+                    raise ValueError("baomoi.com cung khong co du lieu")
+                epg_rows = baomoi_build_epg_rows(baomoi_schedule, target_date)
+                filename = f"{safe_filename_part(channel_name)}EPG{date_stamp}.xls"
+                file_path = out_dir / filename
+                write_xls(file_path, epg_rows)
+                success.append((channel_name, file_path, len(epg_rows)))
+                print(
+                    f"[{idx}/{len(CHANNELS)}] OK  - {channel_name}: {len(epg_rows)} muc lich "
+                    f"-> {file_path} (nguon du phong: baomoi.com, vtv.vn khong co du lieu)"
+                )
+            except Exception as e2:  # noqa: BLE001
+                failures.append((channel_name, f"vtv.vn: {e} | baomoi.com: {e2}"))
+                print(f"[{idx}/{len(CHANNELS)}] LOI - {channel_name}: {e2}", file=sys.stderr)
 
     print("\n===== TONG KET =====")
     print(f"Thanh cong: {len(success)}/{len(CHANNELS)} kenh")
