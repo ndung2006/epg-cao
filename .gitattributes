@@ -1,0 +1,6 @@
+# File chạy trong Linux — giữ xuống dòng kiểu Unix, không thì container hỏng
+*.sh text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.py text eol=lf

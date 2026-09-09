@@ -34,7 +34,11 @@ from epg_client import EpgClient, EpgError, load_config   # noqa: E402
 from push_output import push_folder                       # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATE_FILE = os.path.join(ROOT, ".epg_push_state.json")
+# Nhớ mốc đã chạy giữa các lần khởi động. Trong container thì trỏ biến
+# EPG_PUSH_STATE vào một volume (ví dụ /data/.epg_push_state.json) để
+# khởi động lại không cào lại mốc đã cào.
+STATE_FILE = os.environ.get("EPG_PUSH_STATE") or os.path.join(
+    ROOT, ".epg_push_state.json")
 
 
 def _log(msg):

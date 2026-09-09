@@ -1,0 +1,18 @@
+# Không đưa vào ảnh
+output/
+*.log
+.git/
+.github/
+.gitea/
+__pycache__/
+*.pyc
+.venv/
+venv/
+tests/
+# Cấu hình chứa token — TUYỆT ĐỐI không vào ảnh
+epg_push_config.json
+epg_push_config.local.json
+.epg_push_state.json
+# File mẫu, tài liệu không cần trong ảnh chạy
+"Kenh cần EPG"/
+*.md

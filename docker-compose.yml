@@ -1,0 +1,23 @@
+# Thợ nền cào + đẩy sang EPG. Coolify đọc thẳng file này (Docker Compose),
+# hoặc chạy tay:  docker compose up -d --build
+#
+# Bắt buộc đặt hai biến bí mật (Coolify > Environment Variables):
+#   EPG_URL          https://epg.vtcrd.top
+#   EPG_CRAWL_TOKEN  đúng chuỗi đặt ở app EPG
+services:
+  cao:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: epg-cao:latest
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Ho_Chi_Minh
+      # Đặt hai biến này trên Coolify, KHÔNG ghi thẳng token vào đây:
+      # EPG_URL: "https://epg.vtcrd.top"
+      # EPG_CRAWL_TOKEN: "..."
+    volumes:
+      # Nhớ mốc đã cào + giữ file output giữa các lần khởi động lại
+      - cao-data:/data
+volumes:
+  cao-data:

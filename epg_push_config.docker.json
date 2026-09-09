@@ -1,0 +1,16 @@
+{
+  "output_dir": "/data/output",
+  "verify_tls": true,
+  "timeout": 90,
+  "crawl_timeout": 900,
+  "crawl_commands": [
+    ["python", "scripts/fetch_vtv_schedule.py", "--output-dir", "{output}"],
+    ["python", "scripts/fetch_tv_schedule.py", "--output-dir", "{output}"],
+    ["python", "scripts/fetch_sctv_schedule.py", "--output-dir", "{output}"],
+    ["python", "scripts/fetch_nghean_schedule.py", "--output-dir", "{output}"],
+    ["python", "scripts/fetch_quangninh_schedule.py", "--output-dir", "{output}"],
+    ["python", "scripts/fetch_thanhhoa_schedule.py", "--output-dir", "{output}"],
+    ["python", "scripts/fetch_thvl_schedule.py", "--output-dir", "{output}"],
+    ["python", "scripts/fetch_vietnamtoday_schedule.py", "--output-dir", "{output}"]
+  ]
+}
