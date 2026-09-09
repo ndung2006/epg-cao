@@ -57,6 +57,12 @@
       "scripts/fetch_haiphong_schedule.py",
       "--output-dir",
       "{output}"
+    ],
+    [
+      "python",
+      "scripts/fetch_angiang_schedule.py",
+      "--output-dir",
+      "{output}"
     ]
   ]
 }

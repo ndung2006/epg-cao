@@ -51,6 +51,14 @@ TEN_KENH_THAY = {
     "binhthuantv-btv": "LAM DONG 2",
 }
 
+# Kenh KHONG lay tu baomoi nua vi da co nguon rieng chinh xac hon (script
+# fetch_<dai>_schedule.py). Bo qua ngay khi discover de khong sinh file trung
+# roi tranh nhau voi nguon rieng.
+#   angiangtv-atv: lay tu angiangtv.vn (AN GIANG 1 & 3) qua fetch_angiang.
+BO_QUA_SLUG = {
+    "angiangtv-atv",
+}
+
 
 def safe_filename_part(text: str) -> str:
     cleaned = "".join(c for c in text if c not in INVALID_FILENAME_CHARS)
@@ -96,6 +104,8 @@ def discover_channels(session: requests.Session):
         else:
             full_url = "https://baomoi.com" + (href if href.startswith("/") else "/" + href)
         slug = m.group(1).lower()
+        if slug in BO_QUA_SLUG:
+            continue                       # da co nguon rieng, khong lay baomoi
         # Doi ten kenh sang ten dung ben EPG (neu co trong bang), roi moi
         # dung lam ten file — dai sap nhap: BacGiangTV -> BAC NINH, v.v.
         name = TEN_KENH_THAY.get(slug) or a.get_text(strip=True) or slug
