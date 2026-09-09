@@ -7,3 +7,8 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Cau hinh day len EPG - CHUA TOKEN, khong commit
+epg_push_config.json
+epg_push_config.local.json
+.epg_push_state.json

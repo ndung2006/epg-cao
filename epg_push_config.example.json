@@ -1,0 +1,21 @@
+{
+  "epg_url": "https://epg.vtcrd.top",
+  "token": "DAT-CHUOI-KHOA-GIONG-EPG_CRAWL_TOKEN-TREN-MAY-CHU-EPG",
+  "output_dir": "./output",
+  "verify_tls": true,
+  "timeout": 60,
+  "crawl_commands": [
+    [
+      "python3",
+      "scripts/fetch_tv_schedule.py",
+      "--output-dir",
+      "{output}"
+    ],
+    [
+      "python3",
+      "scripts/fetch_vtv_schedule.py",
+      "--output-dir",
+      "{output}"
+    ]
+  ]
+}

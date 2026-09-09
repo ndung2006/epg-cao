@@ -86,3 +86,45 @@ theo múi giờ hệ thống trong `SKILL.md`.
   đã sắp xếp.
 - `output/` không nên commit vào git (xem `.gitignore`) vì đây là dữ liệu sinh ra
   mỗi ngày, không phải mã nguồn.
+
+## Đẩy lịch sang hệ thống nhập liệu EPG
+
+Ngoài việc cào ra file `.xls`, kho này còn đẩy thẳng file sang app EPG
+(`epg.vtcrd.top`) để kênh đặt "Tự động" được nạp và gửi duyệt luôn, khỏi
+tải tay. Xem `scripts/epg_client.py`, `push_output.py`, `crawl_and_push.py`.
+
+Đây là phía crawler của mô hình "một app + thợ nền": app EPG giữ lịch cào
+và cấu hình kênh (tab **Quản lý dữ liệu**), crawler chỉ hỏi lệnh rồi cào +
+đẩy. Crawler và EPG tách hẳn — bên này hỏng không kéo bên kia.
+
+### Cài đặt một lần
+
+1. Chép `epg_push_config.example.json` thành `epg_push_config.json`.
+2. Điền:
+   - `epg_url`: địa chỉ app EPG, ví dụ `https://epg.vtcrd.top`
+   - `token`: đúng chuỗi đặt ở biến `EPG_CRAWL_TOKEN` trên máy chủ EPG
+   - `crawl_commands`: các lệnh cào chạy trước khi đẩy (`{output}` = thư
+     mục output, script tự tạo thư mục con theo ngày)
+3. `pip install requests`
+
+File `epg_push_config.json` chứa token nên **không commit** (đã có trong
+`.gitignore`).
+
+### Chạy
+
+```bash
+# cào + đẩy ngay một lần (thử, hoặc cào tay)
+python3 scripts/crawl_and_push.py --once
+
+# chỉ đẩy thư mục hôm nay đã cào sẵn, không cào lại
+python3 scripts/crawl_and_push.py --once --push-only
+
+# chạy nền: cứ vài phút hỏi lịch EPG, tới giờ mong muốn thì tự cào + đẩy
+python3 scripts/crawl_and_push.py --daemon
+```
+
+Giờ cào bật/tắt và các mốc giờ lấy từ EPG (tab Quản lý dữ liệu) — đổi trên
+web là lần chạy sau theo ngay, không phải sửa gì ở máy crawler. Đặt
+`crawl_and_push.py --daemon` chạy nền (systemd/nssm/cron `@reboot`) là xong.
+
+Kiểm thử: `python tests/test_epg_client.py` (dùng EPG giả, không cần mạng).
