@@ -41,6 +41,14 @@ HEADERS = {
 # Ky tu khong duoc phep trong ten file tren Windows
 INVALID_FILENAME_CHARS = '\\/:*?"<>|'
 
+# Vai kenh baomoi phai doi TEN FILE khi xuat, vi dai da sap nhap / doi ten.
+# Key = slug trong link baomoi (.../tien-ich-lich-truyen-hinh-<slug>.epi),
+# value = ten kenh dung DUNG nhu ben EPG (EPG khop file theo file_prefix).
+#   bacgiangtv-bgtv: dai Bac Giang da sap nhap vao Bac Ninh -> file "BAC NINH".
+TEN_KENH_THAY = {
+    "bacgiangtv-bgtv": "BAC NINH",
+}
+
 
 def safe_filename_part(text: str) -> str:
     cleaned = "".join(c for c in text if c not in INVALID_FILENAME_CHARS)
@@ -78,13 +86,17 @@ def discover_channels(session: requests.Session):
 
     for a in soup.find_all("a", href=True):
         href = a["href"]
-        if not CHANNEL_LINK_RE.search(href):
+        m = CHANNEL_LINK_RE.search(href)
+        if not m:
             continue
         if href.startswith("http"):
             full_url = href
         else:
             full_url = "https://baomoi.com" + (href if href.startswith("/") else "/" + href)
-        name = a.get_text(strip=True) or CHANNEL_LINK_RE.search(href).group(1)
+        slug = m.group(1).lower()
+        # Doi ten kenh sang ten dung ben EPG (neu co trong bang), roi moi
+        # dung lam ten file — dai sap nhap: BacGiangTV -> BAC NINH, v.v.
+        name = TEN_KENH_THAY.get(slug) or a.get_text(strip=True) or slug
 
         key = name.strip().lower()
         if not key or key in seen_names:
