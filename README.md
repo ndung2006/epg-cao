@@ -128,3 +128,21 @@ web là lần chạy sau theo ngay, không phải sửa gì ở máy crawler. Đ
 `crawl_and_push.py --daemon` chạy nền (systemd/nssm/cron `@reboot`) là xong.
 
 Kiểm thử: `python tests/test_epg_client.py` (dùng EPG giả, không cần mạng).
+
+## Kênh Hải Phòng — nguồn riêng thhp.vn
+
+`scripts/fetch_haiphong_schedule.py` lấy lịch hai kênh truyền hình Hải Phòng
+từ API JSON chính thức của thhp.vn (không dùng baomoi cho hai kênh này):
+
+    channel=1  THP   -> "HAI PHONG 1" (EPG 822)
+    channel=2  THP+  -> "HAI PHONG 3" (EPG 823)
+
+## Nguồn nào thắng khi trùng kênh
+
+baomoi cào gần hết các kênh, nhưng vài kênh có nguồn riêng chất lượng hơn
+(VTV, SCTV, Nghệ An, Quảng Ninh, Thanh Hóa, Vĩnh Long, Vietnam Today, Hải
+Phòng). Quy tắc: **cào baomoi TRƯỚC, các nguồn riêng SAU**, và `push_output`
+đẩy file theo thứ tự cũ → mới. File nguồn riêng cào sau nên mới hơn, được
+đẩy sau, EPG lấy bản đẩy sau. Nhờ vậy nguồn riêng luôn thắng mà không phải
+maintain danh sách kênh nào đè kênh nào — cứ thêm nguồn riêng vào SAU baomoi
+trong `crawl_commands` là đủ.

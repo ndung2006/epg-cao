@@ -43,9 +43,15 @@ def push_folder(client, folder, air_date):
     Một file EPG từ chối nội dung (result 'loi') vẫn tính là đã gửi được —
     'hỏng' ở đây chỉ đếm những file KHÔNG gửi được (mất mạng, EPG sập).
     """
-    files = sorted(f for f in os.listdir(folder)
-                   if f.lower().endswith((".xls", ".xlsx", ".xlsm"))
-                   and not f.startswith("~$"))
+    # Đẩy theo thứ tự file CŨ -> MỚI (thời gian sửa). Nếu hai nguồn cùng
+    # cào một kênh (baomoi + nguồn riêng), nguồn nào cào SAU thì file mới
+    # hơn, được đẩy sau, và EPG lấy bản đẩy sau. Nhờ vậy chỉ cần xếp lệnh
+    # cào: baomoi trước, nguồn riêng sau, là nguồn riêng luôn thắng — không
+    # phải maintain danh sách tên kênh nào đè kênh nào.
+    names = [f for f in os.listdir(folder)
+             if f.lower().endswith((".xls", ".xlsx", ".xlsm"))
+             and not f.startswith("~$")]
+    files = sorted(names, key=lambda f: os.path.getmtime(os.path.join(folder, f)))
     ket_qua, ok, hong = [], 0, 0
     for name in files:
         path = os.path.join(folder, name)
