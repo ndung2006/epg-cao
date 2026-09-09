@@ -48,7 +48,7 @@ Compose cho gọn:
 
 1. **+ New Resource › Docker Compose** (không phải Application), chọn kho
    `epg-cao` vừa tạo, nhánh `main`.
-2. Coolify đọc `docker-compose.yml` sẵn trong kho — không cần cấu hình
+2. Coolify đọc `docker-compose.yaml` sẵn trong kho — không cần cấu hình
    Build Pack hay Port.
 3. **Auto Deploy**: tuỳ ý. Bật cũng được vì đây là worker, không có bản
    dựng hỏng nào lên sóng trực tiếp.
