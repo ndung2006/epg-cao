@@ -27,6 +27,7 @@ import epg_client                                    # noqa: E402
 from epg_client import EpgClient, EpgError, load_config   # noqa: E402
 import push_output                                   # noqa: E402
 import crawl_and_push                                # noqa: E402
+import fetch_tv_schedule                             # noqa: E402
 
 PASS, FAIL = [], []
 TOKEN = "khoa thu nghiem"
@@ -211,6 +212,38 @@ def test_lich_tho_nen():
           "2026-09-09" not in st.get("ran", {}))
 
 
+def test_normalize():
+    """write_xls dọn dữ liệu cào: bỏ mục lệch ngày, gộp mục trùng giờ,
+    tính lại thời lượng — không để EPG từ chối cả file."""
+    print("\n--- Dọn dữ liệu cào (normalize_epg_rows) ---")
+    import datetime as dt
+    D = dt.datetime
+    rows = [
+        {"start_dt": D(1, 1, 1, 0, 0), "duration": dt.timedelta(days=9),
+         "program": "rác 0001"},
+        {"start_dt": D(2026, 9, 9, 6, 0), "duration": dt.timedelta(0),
+         "program": "Sáng"},
+        {"start_dt": D(2026, 9, 9, 11, 45), "duration": dt.timedelta(0),
+         "program": "Trùng 1"},
+        {"start_dt": D(2026, 9, 9, 11, 45), "duration": dt.timedelta(minutes=30),
+         "program": "Trùng 2"},
+        {"start_dt": D(2026, 9, 9, 12, 15), "duration": dt.timedelta(minutes=45),
+         "program": "Trưa"},
+    ]
+    out = fetch_tv_schedule.normalize_epg_rows(rows)
+    check("bỏ mục lệch ngày (0001)", all(r["start_dt"].year == 2026 for r in out))
+    check("gộp mục trùng giờ còn một", len(out) == 3, str(len(out)))
+    check("không còn thời lượng 0",
+          all(r["duration"].total_seconds() > 0 for r in out))
+    check("không còn trùng giờ bắt đầu",
+          len({r["start_dt"] for r in out}) == len(out))
+    check("mục trùng giữ bản sau cùng",
+          any(r["program"] == "Trùng 2" for r in out))
+    # rỗng thì trả nguyên
+    check("danh sách rỗng thì không lỗi",
+          fetch_tv_schedule.normalize_epg_rows([]) == [])
+
+
 def main():
     srv, url = start_gia()
     try:
@@ -220,6 +253,7 @@ def main():
         test_epg_sap()
         test_push_folder(url)
         test_lich_tho_nen()
+        test_normalize()
     finally:
         srv.shutdown()
 

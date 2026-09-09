@@ -90,6 +90,11 @@ def fetch_schedule(session: requests.Session, target_date: datetime.date, timeou
                     dt = datetime.datetime.fromisoformat(sched)
                 except ValueError:
                     continue
+                # Bo muc khong thuoc ngay can lay: API doi khi kem mot muc
+                # "phat lai" cua ngay khac voi gio rac (vd nam 0001), lot vao
+                # dau danh sach -> thoi luong khong lo. Chi giu dung ngay nay.
+                if dt.date() != target_date:
+                    continue
                 desc = (it.get("Description") or "").strip()
                 results.append((dt, title, desc))
             # API đã trả theo giờ tăng dần, nhưng sort lại cho chắc

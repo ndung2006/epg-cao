@@ -158,6 +158,50 @@ def build_epg_rows(schedule_pairs, base_date: datetime.date):
     return rows
 
 
+def normalize_epg_rows(epg_rows):
+    """Don danh sach dong truoc khi ghi, de EPG khong tu choi ca file.
+
+    Ba loi hay gap trong du lieu cao, xu ly o DUNG MOT CHO nay vi moi script
+    (baomoi, quangninh, nghean, thanhhoa, sctv, thvl, vietnamtoday) deu ghi
+    file qua write_xls:
+
+      * Muc lech ngay: nguon doi khi tra mot muc "phat lai" voi gio rac (vd
+        nam 0001), ra thoi luong khong lo. -> bo dong khong thuoc ngay chiem
+        da so.
+      * Trung gio bat dau: hai muc cung phut -> mot muc thoi luong 0 (EPG
+        chan E02) va trung gio (E03). -> giu muc sau cung o moi moc gio.
+      * Sau khi don thi TINH LAI thoi luong = moc ke tiep tru moc nay; dong
+        cuoi cat tai 23:59:59 cung ngay.
+    """
+    from collections import Counter
+
+    rows = [r for r in epg_rows if r.get("start_dt") is not None]
+    if not rows:
+        return epg_rows
+
+    ngay = Counter(r["start_dt"].date() for r in rows).most_common(1)[0][0]
+    rows = [r for r in rows if r["start_dt"].date() == ngay]
+
+    theo_gio = {}
+    for r in sorted(rows, key=lambda x: x["start_dt"]):
+        theo_gio[r["start_dt"]] = r        # trung gio -> muc sau cung thang
+    uniq = [theo_gio[k] for k in sorted(theo_gio)]
+
+    out = []
+    for i, r in enumerate(uniq):
+        d = r["start_dt"]
+        if i + 1 < len(uniq):
+            dur = uniq[i + 1]["start_dt"] - d
+        else:
+            eod = datetime.datetime(d.year, d.month, d.day, 23, 59, 59)
+            dur = eod - d
+            if dur.total_seconds() < 0:
+                dur = datetime.timedelta(0)
+        out.append({"id": i + 1, "start_dt": d, "duration": dur,
+                    "program": r.get("program", "")})
+    return out
+
+
 def write_xls(path: Path, epg_rows):
     """Ghi file .xls chuan (Excel 97-2003) dung cau truc: 3 dong trong, 1 dong tieu de,
     cac cot ID / Ngay / Thoi gian bat dau / Thoi luong / Ten chuong trinh.
@@ -167,6 +211,8 @@ def write_xls(path: Path, epg_rows):
     Cot Ngay / Thoi gian bat dau / Thoi luong duoc ghi la gia tri ngay-gio thuc su
     cua Excel (khong phai chuoi text) de sap xep tang dan dung thu tu thoi gian
     (00:00:00 -> 23:59:59), thay vi bi sap xep sai theo kieu so sanh chuoi ky tu."""
+    epg_rows = normalize_epg_rows(epg_rows)
+
     wb = xlwt.Workbook(encoding="utf-8")
     ws = wb.add_sheet("Sheet1")
 
