@@ -44,9 +44,11 @@ INVALID_FILENAME_CHARS = '\\/:*?"<>|'
 # Vai kenh baomoi phai doi TEN FILE khi xuat, vi dai da sap nhap / doi ten.
 # Key = slug trong link baomoi (.../tien-ich-lich-truyen-hinh-<slug>.epi),
 # value = ten kenh dung DUNG nhu ben EPG (EPG khop file theo file_prefix).
-#   bacgiangtv-bgtv: dai Bac Giang da sap nhap vao Bac Ninh -> file "BAC NINH".
+#   bacgiangtv-bgtv:  dai Bac Giang da sap nhap vao Bac Ninh  -> "BAC NINH".
+#   binhthuantv-btv:  dai Binh Thuan da sap nhap vao Lam Dong -> "LAM DONG 2".
 TEN_KENH_THAY = {
     "bacgiangtv-bgtv": "BAC NINH",
+    "binhthuantv-btv": "LAM DONG 2",
 }
 
 
