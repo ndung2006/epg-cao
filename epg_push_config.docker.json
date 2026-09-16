@@ -69,6 +69,12 @@
       "scripts/fetch_hanoi_schedule.py",
       "--output-dir",
       "{output}"
+    ],
+    [
+      "python",
+      "scripts/fetch_dongnai_schedule.py",
+      "--output-dir",
+      "{output}"
     ]
   ]
 }

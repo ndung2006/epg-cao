@@ -56,10 +56,13 @@ TEN_KENH_THAY = {
 # roi tranh nhau voi nguon rieng.
 #   angiangtv-atv: lay tu angiangtv.vn (AN GIANG 1 & 3) qua fetch_angiang.
 #   hanoitv1-hd / hanoitv2-hd: lay tu hanoionline.vn qua fetch_hanoi.
+#   dongnaitv1-dn1-hd / dongnaitv2-dn2: lay tu tv360.vn qua fetch_dongnai.
 BO_QUA_SLUG = {
     "angiangtv-atv",
     "hanoitv1-hd",
     "hanoitv2-hd",
+    "dongnaitv1-dn1-hd",
+    "dongnaitv2-dn2",
 }
 
 

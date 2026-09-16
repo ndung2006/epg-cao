@@ -42,8 +42,6 @@ CHANNELS = [
     ("ANTV HD", "ANTV"),
     ("QPVN HD", "QPVN (HD)"),
     ("HTV2", "HTV2 (HD)"),
-    ("DONG NAI 1", "DongNaiTV1 (DN1) (HD)"),
-    ("DONG NAI 2", "DongNaiTV2 (DN2)"),
     ("VTVcab8-BIBI", "VTVcab8 - BIBI"),
     ("QUANG TRI", "QuangTriTV (QRTV)"),
     ("PHU THO", "PhuThoTV (PTV) (HD)"),
