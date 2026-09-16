@@ -63,6 +63,12 @@
       "scripts/fetch_angiang_schedule.py",
       "--output-dir",
       "{output}"
+    ],
+    [
+      "python",
+      "scripts/fetch_hanoi_schedule.py",
+      "--output-dir",
+      "{output}"
     ]
   ]
 }

@@ -55,8 +55,11 @@ TEN_KENH_THAY = {
 # fetch_<dai>_schedule.py). Bo qua ngay khi discover de khong sinh file trung
 # roi tranh nhau voi nguon rieng.
 #   angiangtv-atv: lay tu angiangtv.vn (AN GIANG 1 & 3) qua fetch_angiang.
+#   hanoitv1-hd / hanoitv2-hd: lay tu hanoionline.vn qua fetch_hanoi.
 BO_QUA_SLUG = {
     "angiangtv-atv",
+    "hanoitv1-hd",
+    "hanoitv2-hd",
 }
 
 

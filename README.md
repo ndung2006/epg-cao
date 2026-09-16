@@ -137,11 +137,22 @@ từ API JSON chính thức của thhp.vn (không dùng baomoi cho hai kênh nà
     channel=1  THP   -> "HAI PHONG 1" (EPG 822)
     channel=2  THP+  -> "HAI PHONG 3" (EPG 823)
 
+## Kênh Hà Nội — nguồn riêng hanoionline.vn
+
+`scripts/fetch_hanoi_schedule.py` lấy lịch hai kênh truyền hình Hà Nội từ API
+JSON chính thức của hanoionline.vn (không dùng baomoi cho hai kênh này):
+
+    HN1 -> "HA NOI 1"
+    HN2 -> "HA NOI 2"
+
+API: `GET /api/Schedule/listschedule/?key=<HN1|HN2>_<DD_MM_YYYY>`. Tên chương
+trình ghép `Name: Description` khi nguồn có mô tả.
+
 ## Nguồn nào thắng khi trùng kênh
 
 baomoi cào gần hết các kênh, nhưng vài kênh có nguồn riêng chất lượng hơn
 (VTV, SCTV, Nghệ An, Quảng Ninh, Thanh Hóa, Vĩnh Long, Vietnam Today, Hải
-Phòng). Quy tắc: **cào baomoi TRƯỚC, các nguồn riêng SAU**, và `push_output`
+Phòng, An Giang, Hà Nội). Quy tắc: **cào baomoi TRƯỚC, các nguồn riêng SAU**, và `push_output`
 đẩy file theo thứ tự cũ → mới. File nguồn riêng cào sau nên mới hơn, được
 đẩy sau, EPG lấy bản đẩy sau. Nhờ vậy nguồn riêng luôn thắng mà không phải
 maintain danh sách kênh nào đè kênh nào — cứ thêm nguồn riêng vào SAU baomoi

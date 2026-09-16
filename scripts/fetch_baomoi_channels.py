@@ -39,7 +39,6 @@ from fetch_tv_schedule import discover_channels, fetch, parse_schedule, build_ep
 
 # (ten kenh xuat file, ten kenh hien thi tren baomoi.com)
 CHANNELS = [
-    ("HA NOI 1", "HaNoiTV1 (HD)"),
     ("ANTV HD", "ANTV"),
     ("QPVN HD", "QPVN (HD)"),
     ("HTV2", "HTV2 (HD)"),
@@ -49,7 +48,6 @@ CHANNELS = [
     ("QUANG TRI", "QuangTriTV (QRTV)"),
     ("PHU THO", "PhuThoTV (PTV) (HD)"),
     ("LAO CAI", "LaoCaiTV (THLC)"),
-    ("HA NOI 2", "HaNoiTV2 (HD)"),
     ("SON LA", "SonLaTV (STV)"),
     ("TUYEN QUANG", "TuyenQuangTV (TTV)"),
     ("CAO BANG", "CaoBangTV (CRTV)"),
