@@ -148,21 +148,26 @@ JSON chính thức của hanoionline.vn (không dùng baomoi cho hai kênh này)
 API: `GET /api/Schedule/listschedule/?key=<HN1|HN2>_<DD_MM_YYYY>`. Tên chương
 trình ghép `Name: Description` khi nguồn có mô tả.
 
-## Kênh Đồng Nai — nguồn riêng tv360.vn
+## Các kênh lấy qua TV360
 
-`scripts/fetch_dongnai_schedule.py` lấy lịch hai kênh Đồng Nai từ API công
-khai của TV360 (không dùng baomoi cho hai kênh này):
+`scripts/fetch_tv360_schedule.py` lấy lịch từ API công khai của TV360
+(không dùng baomoi cho những kênh này):
 
-    ch=53   tv360.vn/tv/dong-nai-1 -> "DONG NAI 1"
-    ch=255  tv360.vn/tv/dong-nai   -> "DONG NAI 2"
+    ch=53   tv360.vn/tv/dong-nai-1               -> "DONG NAI 1"
+    ch=255  tv360.vn/tv/dong-nai                 -> "DONG NAI 2"
+    ch=174  tv360.vn/tv/vtvcab-16-hd             -> "ON FOOTBALL"
+    ch=170  tv360.vn/tv/vtvcab-18-on-sports-news -> "ON SPORT NEWS"
+    ch=173  tv360.vn/tv/vtvcab-3-on-sports       -> "ON SPORTS"
 
 API: `GET /public/v1/live/get-live-schedule?id=<ch>&datetime=<YYYY-MM-DD>`.
+Thêm kênh mới chỉ cần lấy số `?ch=` trên URL trang kênh rồi thêm vào
+`CHANNELS` trong script (và thêm slug baomoi tương ứng vào `BO_QUA_SLUG`).
 
 ## Nguồn nào thắng khi trùng kênh
 
 baomoi cào gần hết các kênh, nhưng vài kênh có nguồn riêng chất lượng hơn
 (VTV, SCTV, Nghệ An, Quảng Ninh, Thanh Hóa, Vĩnh Long, Vietnam Today, Hải
-Phòng, An Giang, Hà Nội, Đồng Nai). Quy tắc: **cào baomoi TRƯỚC, các nguồn riêng SAU**, và `push_output`
+Phòng, An Giang, Hà Nội, Đồng Nai, 3 kênh ON thể thao). Quy tắc: **cào baomoi TRƯỚC, các nguồn riêng SAU**, và `push_output`
 đẩy file theo thứ tự cũ → mới. File nguồn riêng cào sau nên mới hơn, được
 đẩy sau, EPG lấy bản đẩy sau. Nhờ vậy nguồn riêng luôn thắng mà không phải
 maintain danh sách kênh nào đè kênh nào — cứ thêm nguồn riêng vào SAU baomoi

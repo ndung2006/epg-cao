@@ -60,9 +60,6 @@ CHANNELS = [
     ("AN GIANG 3", "AnGiangTV (ATV)"),
     ("LAM DONG 2", "BinhThuanTV (BTV)"),
     ("BAC NINH", "BacGiangTV (BGTV)"),
-    ("ON SPORTS", "VTVcab3 - Thể Thao TV (HD)"),
-    ("ON SPORT NEWS", "VTVcab18 - Thể thao Tin tức (HD)"),
-    ("ON FOOTBALL", "VTVcab16 - Bóng đá TV"),
 ]
 
 

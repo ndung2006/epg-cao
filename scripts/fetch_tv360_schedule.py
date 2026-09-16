@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-fetch_dongnai_schedule.py
+fetch_tv360_schedule.py
 
-Lay lich phat song hai kenh truyen hinh Dong Nai tu TV360 (tv360.vn) —
-khong dung baomoi cho hai kenh nay nua — va xuat moi kenh thanh 1 file .xls
-dung cau truc EPG mau.
+Lay lich phat song cac kenh co nguon tot hon tren TV360 (tv360.vn) —
+khong dung baomoi cho nhung kenh nay nua — va xuat moi kenh thanh 1 file
+.xls dung cau truc EPG mau.
 
 Nguon la API JSON cong khai cua TV360 (tim thay trong bundle JS cua trang
 https://tv360.vn/tv/dong-nai-1?ch=53, ham getScheduleCategory):
@@ -14,9 +14,12 @@ https://tv360.vn/tv/dong-nai-1?ch=53, ham getScheduleCategory):
            {"name":"...","description":"","startTime":"00:00","endTime":"00:20",
             "datetime":"2026-09-16", ...}, ...]}}
 
-Hai kenh:
-    ch=53   https://tv360.vn/tv/dong-nai-1  -> EPG "DONG NAI 1"
-    ch=255  https://tv360.vn/tv/dong-nai    -> EPG "DONG NAI 2"
+Cac kenh dang lay (id lay tu tham so ?ch= tren URL trang kenh):
+    ch=53   tv360.vn/tv/dong-nai-1                -> EPG "DONG NAI 1"
+    ch=255  tv360.vn/tv/dong-nai                  -> EPG "DONG NAI 2"
+    ch=174  tv360.vn/tv/vtvcab-16-hd              -> EPG "ON FOOTBALL"
+    ch=170  tv360.vn/tv/vtvcab-18-on-sports-news  -> EPG "ON SPORT NEWS"
+    ch=173  tv360.vn/tv/vtvcab-3-on-sports        -> EPG "ON SPORTS"
 (Trang ch=255 co detail.name la "Dong Nai" nhung title trang la "dong nai 2".)
 
 Thoi luong tinh theo "moc ke tiep tru moc nay" (dung build_epg_rows chung nhu
@@ -25,8 +28,8 @@ nen ket qua trung khop voi endTime cua nguon; rieng muc cuoi nguon de 23:59
 con file xuat ra cat tai 23:59:59 dung quy uoc chung cua du an.
 
 Usage:
-    python3 fetch_dongnai_schedule.py --output-dir ./output
-    python3 fetch_dongnai_schedule.py --output-dir ./output --date 2026-09-16
+    python3 fetch_tv360_schedule.py --output-dir ./output
+    python3 fetch_tv360_schedule.py --output-dir ./output --date 2026-09-16
 
 Requires: requests (va fetch_tv_schedule.py + fetch_quangninh_schedule.py
 trong cung thu muc scripts/).
@@ -50,6 +53,9 @@ API_URL = "https://tv360.vn/public/v1/live/get-live-schedule"
 CHANNELS = [
     ("DONG NAI 1", 53),
     ("DONG NAI 2", 255),
+    ("ON FOOTBALL", 174),
+    ("ON SPORT NEWS", 170),
+    ("ON SPORTS", 173),
 ]
 
 HEADERS = {
