@@ -177,6 +177,16 @@ def daemon(cfg, client, poll=300):
         _hb(client, lr.get("at"), lr.get("ok", 0), lr.get("failed", 0),
             lr.get("message"))
 
+        # "Đồng bộ ngay" từ web: mốc mới hơn lần đã xử lý -> cào full NGAY,
+        # không đợi tới giờ. Dấu đã xử lý để không cào lại cùng một yêu cầu.
+        rn = orders.get("run_now")
+        if rn and rn != load_state().get("run_now_done"):
+            _log("nhận yêu cầu Đồng bộ ngay (%s) — cào+đẩy toàn bộ." % rn)
+            cao_va_day(cfg, client)
+            st = load_state()            # nạp lại tươi, đừng đè last_run
+            st["run_now_done"] = rn
+            save_state(st)
+
         if orders.get("enabled") and orders.get("times"):
             now = datetime.datetime.now()
             ngay = now.strftime("%Y-%m-%d")

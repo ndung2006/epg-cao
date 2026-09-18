@@ -212,6 +212,65 @@ def test_lich_tho_nen():
           "2026-09-09" not in st.get("ran", {}))
 
 
+def test_run_now():
+    print("\n--- Đồng bộ ngay (run_now) ---")
+
+    class ClientGia:
+        def __init__(self, orders):
+            self._o = orders
+        def orders(self):
+            return self._o
+        def heartbeat(self, **k):
+            return {"ok": True}
+
+    class _Stop(Exception):
+        pass
+
+    def mot_vong(client):
+        """Chạy đúng một vòng daemon rồi dừng (time.sleep ném _Stop)."""
+        def sleep_stop(_n):
+            raise _Stop
+        goc = crawl_and_push.time.sleep
+        crawl_and_push.time.sleep = sleep_stop
+        try:
+            crawl_and_push.daemon({}, client, poll=0)
+        except _Stop:
+            pass
+        finally:
+            crawl_and_push.time.sleep = goc
+
+    tmp = tempfile.mkdtemp()
+    goc_state = crawl_and_push.STATE_FILE
+    crawl_and_push.STATE_FILE = os.path.join(tmp, "state.json")
+    goc_cvd = crawl_and_push.cao_va_day
+    dem = {"n": 0}
+    crawl_and_push.cao_va_day = lambda cfg, client, **k: (
+        dem.__setitem__("n", dem["n"] + 1),
+        {"ok": 1, "failed": 0, "message": "x"})[1]
+    try:
+        cl = ClientGia({"enabled": False, "times": [], "channels": [],
+                        "run_now": "2026-09-18 10:00:00"})
+        mot_vong(cl)
+        check("có yêu cầu -> cào một lần", dem["n"] == 1, str(dem["n"]))
+        check("đã dấu mốc đã xử lý",
+              crawl_and_push.load_state().get("run_now_done")
+              == "2026-09-18 10:00:00")
+
+        mot_vong(cl)     # cùng mốc, không cào lại
+        check("cùng mốc thì KHÔNG cào lại", dem["n"] == 1, str(dem["n"]))
+
+        cl._o["run_now"] = "2026-09-18 11:00:00"   # mốc mới
+        mot_vong(cl)
+        check("mốc mới thì cào lại", dem["n"] == 2, str(dem["n"]))
+
+        cl._o["run_now"] = None      # không có yêu cầu -> không cào
+        mot_vong(cl)
+        check("không có yêu cầu thì không cào", dem["n"] == 2, str(dem["n"]))
+    finally:
+        crawl_and_push.cao_va_day = goc_cvd
+        crawl_and_push.STATE_FILE = goc_state
+
+
 def test_normalize():
     """write_xls dọn dữ liệu cào: bỏ mục lệch ngày, gộp mục trùng giờ,
     tính lại thời lượng — không để EPG từ chối cả file."""
@@ -253,6 +312,7 @@ def main():
         test_epg_sap()
         test_push_folder(url)
         test_lich_tho_nen()
+        test_run_now()
         test_normalize()
     finally:
         srv.shutdown()

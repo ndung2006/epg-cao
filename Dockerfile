@@ -40,5 +40,6 @@ RUN useradd --create-home --shell /usr/sbin/nologin cao \
  && chown -R cao:cao /data
 USER cao
 
-# Chạy nền: cứ vài phút hỏi lịch EPG, tới giờ mong muốn thì cào + đẩy.
-CMD ["python", "scripts/crawl_and_push.py", "--daemon", "--poll", "120"]
+# Chạy nền: mỗi 60 giây hỏi lịch EPG — tới giờ mong muốn thì cào + đẩy, và
+# thấy yêu cầu "Đồng bộ ngay" thì cào full luôn (nên poll ngắn cho nhạy).
+CMD ["python", "scripts/crawl_and_push.py", "--daemon", "--poll", "60"]
