@@ -7,6 +7,8 @@ nguon baomoi.com, theo dung mapping ten kenh da duoc nguoi dung xac nhan
 thu cong truoc do. Cac kenh da chuyen sang nguon rieng (VTV1/2/3/5/6/9/10,
 Quang Ninh 1/3, Nghe An, Thanh Hoa, Vinh Long 1/2, SCTV9/14, Vietnam Today)
 KHONG nam trong danh sach nay - xem cac script fetch_*_schedule.py tuong ung.
+(Vietnam Today truoc day lay tu vietnamtoday.vtv.vn, nay chuyen sang TV360
+cung voi Dong Nai, ON Football... trong fetch_tv360_schedule.py.)
 
 Mapping (ten kenh xuat file -> ten kenh hien thi tren baomoi.com):
   - Hai Phong 1/3 va An Giang 1/3: baomoi chi co 1 kenh chung cho moi tinh,

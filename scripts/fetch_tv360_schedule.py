@@ -20,7 +20,10 @@ Cac kenh dang lay (id lay tu tham so ?ch= tren URL trang kenh):
     ch=174  tv360.vn/tv/vtvcab-16-hd              -> EPG "ON FOOTBALL"
     ch=170  tv360.vn/tv/vtvcab-18-on-sports-news  -> EPG "ON SPORT NEWS"
     ch=173  tv360.vn/tv/vtvcab-3-on-sports        -> EPG "ON SPORTS"
+    ch=9951 tv360.vn/tv/vietnam-today-hd          -> EPG "Vietnam Today"
 (Trang ch=255 co detail.name la "Dong Nai" nhung title trang la "dong nai 2".)
+(Vietnam Today truoc day lay tu vietnamtoday.vtv.vn nhung API do khong on dinh,
+chuyen sang TV360 cho do tin cay — cung API, cung format nhu cac kenh khac.)
 
 Thoi luong tinh theo "moc ke tiep tru moc nay" (dung build_epg_rows chung nhu
 cac script khac). Lich TV360 lien mach (endTime = startTime cua muc ke tiep)
@@ -56,6 +59,7 @@ CHANNELS = [
     ("ON FOOTBALL", 174),
     ("ON SPORT NEWS", 170),
     ("ON SPORTS", 173),
+    ("Vietnam Today", 9951),
 ]
 
 HEADERS = {

@@ -48,12 +48,6 @@
     ],
     [
       "python",
-      "scripts/fetch_vietnamtoday_schedule.py",
-      "--output-dir",
-      "{output}"
-    ],
-    [
-      "python",
       "scripts/fetch_haiphong_schedule.py",
       "--output-dir",
       "{output}"
