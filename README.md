@@ -164,6 +164,21 @@ API: `GET /public/v1/live/get-live-schedule?id=<ch>&datetime=<YYYY-MM-DD>`.
 Thêm kênh mới chỉ cần lấy số `?ch=` trên URL trang kênh rồi thêm vào
 `CHANNELS` trong script (và thêm slug baomoi tương ứng vào `BO_QUA_SLUG`).
 
+## Kênh phát thanh VOV — nguồn vov1.vov.vn / vov3.vov.vn
+
+`scripts/fetch_vov_schedule.py` cào lịch hai kênh phát thanh VOV1 và VOV3
+thẳng từ HTML trang chủ của mỗi kênh (baomoi không có kênh phát thanh nên
+không trùng nguồn với ai).
+
+Lưu ý: trang **không ghi ngày** cho khối lịch, nên script chỉ lấy được
+"lịch đang hiển thị" rồi gán cho ngày chạy. Muốn gán cho ngày khác phải
+thêm `--use-current-schedule` — đây vẫn là lịch hiện tại, không phải lịch
+lưu trữ của ngày đó.
+
+Thời lượng tính theo "mốc kế tiếp trừ mốc này", không dùng giờ kết thúc
+của nguồn — trang VOV1 có mục gõ nhầm giờ kết thúc (`08h30-06h35`) nên
+cách này an toàn hơn.
+
 ## Nguồn nào thắng khi trùng kênh
 
 baomoi cào gần hết các kênh, nhưng vài kênh có nguồn riêng chất lượng hơn
