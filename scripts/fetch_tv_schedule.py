@@ -67,6 +67,7 @@ BO_QUA_SLUG = {
     "vtvcab3-the-thao-tv-hd",
     "vtvcab18-the-thao-tin-tuc-hd",
     "vtvcab16-bong-da-tv",
+    "phuthotv-ptv-hd",         # PHU THO chuyen sang TV360 (id 77)
 }
 
 

@@ -60,6 +60,7 @@ CHANNELS = [
     ("ON SPORT NEWS", 170),
     ("ON SPORTS", 173),
     ("Vietnam Today", 9951),
+    ("PHU THO", 77),        # tv360.vn/tv/phu-tho -> EPG "PHU THO" (thay baomoi)
 ]
 
 HEADERS = {
