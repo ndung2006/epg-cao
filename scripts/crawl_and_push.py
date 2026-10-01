@@ -153,6 +153,19 @@ def _danh_dau_chay(ngay, gio):
     save_state(st)
 
 
+# Healthcheck của Docker đọc mốc sửa đổi của file này: còn mới (< 10 phút)
+# tức là vòng lặp còn chạy VÀ vừa nói chuyện được với EPG.
+ALIVE_FILE = os.environ.get("CAO_ALIVE_FILE") or "/tmp/cao-alive"
+
+
+def _con_song():
+    try:
+        with open(ALIVE_FILE, "w") as f:
+            f.write(datetime.datetime.now().isoformat(timespec="seconds"))
+    except OSError:
+        pass
+
+
 def daemon(cfg, client, poll=300):
     _log("Thợ nền khởi động. Hỏi lịch EPG mỗi %d giây." % poll)
     orders_cache = None
@@ -160,6 +173,7 @@ def daemon(cfg, client, poll=300):
         try:
             orders = client.orders()
             orders_cache = orders
+            _con_song()
             st = load_state()
             st["orders_cache"] = orders
             save_state(st)
