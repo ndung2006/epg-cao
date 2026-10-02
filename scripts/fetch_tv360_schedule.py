@@ -65,13 +65,7 @@ CHANNELS = [
     # crawl_commands: cung ten file voi nguon cu nen ghi de; TV360 trong kenh
     # nao thi file nguon cu (baomoi / vtv.vn / web dai) con lai lam du phong.
     # Khong dua vao: BAC NINH, LAM DONG 2 (kenh sap nhap — TV360 la dai khac),
-    # AN GIANG 3 (TV360 chi co "An Giang 2"), VTV2 (TV360 khong co).
-    ("VTV1", 2),
-    ("VTV3", 4),
-    ("VTV5", 110),
-    ("VTV6", 10043),
-    ("VTV9", 8),
-    ("VTV10", 98),
+    # VTV1/2/3/5/6/9/10 (giu nguon vtv.vn), AN GIANG 1 & 3 (giu angiangtv.vn).
     ("VTVcab8-BIBI", 178),
     ("ANTV HD", 20),
     ("QPVN HD", 19),
@@ -96,7 +90,6 @@ CHANNELS = [
     ("NINH BINH", 75),
     ("THAI NGUYEN", 88),
     ("LAI CHAU", 68),
-    ("AN GIANG 1", 66),
 ]
 
 HEADERS = {

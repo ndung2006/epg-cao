@@ -52,6 +52,8 @@ TEN_KENH_THAY = {
     # Kenh UU TIEN lay tu TV360. baomoi van cao nhung dat ten file TRUNG ten
     # kenh EPG (= ten file TV360). TV360 chay SAU CUNG nen ghi de; ngay nao
     # TV360 trong kenh do thi ban baomoi con lai lam du phong.
+    # VTV5/VTV9: nguon chinh la vtv.vn (cung ten file, chay sau baomoi nen
+    # ghi de); vtv.vn chua cong bo lich thi ban baomoi lam du phong.
     "vtv5-hd": "VTV5",
     "vtv9": "VTV9",
     "vtvcab8-bibi": "VTVcab8-BIBI",
