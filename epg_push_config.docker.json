@@ -66,13 +66,13 @@
     ],
     [
       "python",
-      "scripts/fetch_tv360_schedule.py",
+      "scripts/fetch_vov_schedule.py",
       "--output-dir",
       "{output}"
     ],
     [
       "python",
-      "scripts/fetch_vov_schedule.py",
+      "scripts/fetch_tv360_schedule.py",
       "--output-dir",
       "{output}"
     ]

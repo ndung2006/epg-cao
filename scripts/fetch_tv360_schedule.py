@@ -61,6 +61,42 @@ CHANNELS = [
     ("ON SPORTS", 173),
     ("Vietnam Today", 9951),
     ("PHU THO", 77),        # tv360.vn/tv/phu-tho -> EPG "PHU THO" (thay baomoi)
+    # --- Uu tien TV360 (10/2026). Script nay chay SAU CUNG trong
+    # crawl_commands: cung ten file voi nguon cu nen ghi de; TV360 trong kenh
+    # nao thi file nguon cu (baomoi / vtv.vn / web dai) con lai lam du phong.
+    # Khong dua vao: BAC NINH, LAM DONG 2 (kenh sap nhap — TV360 la dai khac),
+    # AN GIANG 3 (TV360 chi co "An Giang 2"), VTV2 (TV360 khong co).
+    ("VTV1", 2),
+    ("VTV3", 4),
+    ("VTV5", 110),
+    ("VTV6", 10043),
+    ("VTV9", 8),
+    ("VTV10", 98),
+    ("VTVcab8-BIBI", 178),
+    ("ANTV HD", 20),
+    ("QPVN HD", 19),
+    ("HTV2", 191),
+    ("HA NOI 1", 33),
+    ("HA NOI 2", 34),
+    ("QUANG NINH 1", 82),
+    ("QUANG NINH 3", 134),
+    ("HAI PHONG 1", 60),
+    ("HAI PHONG 3", 59),
+    ("VINH LONG 1 HD", 25),
+    ("VINH LONG 2 HD", 26),
+    ("THANH HOA", 89),
+    ("NGHE AN", 74),
+    ("QUANG TRI", 83),
+    ("LAO CAI", 71),
+    ("SON LA", 85),
+    ("TUYEN QUANG", 92),
+    ("CAO BANG", 48),
+    ("DAKLAK", 51),
+    ("LAM DONG", 69),
+    ("NINH BINH", 75),
+    ("THAI NGUYEN", 88),
+    ("LAI CHAU", 68),
+    ("AN GIANG 1", 66),
 ]
 
 HEADERS = {

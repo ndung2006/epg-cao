@@ -49,6 +49,25 @@ INVALID_FILENAME_CHARS = '\\/:*?"<>|'
 TEN_KENH_THAY = {
     "bacgiangtv-bgtv": "BAC NINH",
     "binhthuantv-btv": "LAM DONG 2",
+    # Kenh UU TIEN lay tu TV360. baomoi van cao nhung dat ten file TRUNG ten
+    # kenh EPG (= ten file TV360). TV360 chay SAU CUNG nen ghi de; ngay nao
+    # TV360 trong kenh do thi ban baomoi con lai lam du phong.
+    "vtv5-hd": "VTV5",
+    "vtv9": "VTV9",
+    "vtvcab8-bibi": "VTVcab8-BIBI",
+    "antv": "ANTV HD",
+    "qpvn-hd": "QPVN HD",
+    "htv2-hd": "HTV2",
+    "caobangtv-crtv": "CAO BANG",
+    "daklaktv-drt": "DAKLAK",
+    "laichautv-ltv": "LAI CHAU",
+    "lamdongtv-ldtv": "LAM DONG",
+    "laocaitv-thlc": "LAO CAI",
+    "ninhbinhtv-ntb": "NINH BINH",
+    "quangtritv-qrtv": "QUANG TRI",
+    "sonlatv-stv": "SON LA",
+    "thainguyentv1-tv1-hd": "THAI NGUYEN",
+    "tuyenquangtv-ttv": "TUYEN QUANG",
 }
 
 # Kenh KHONG lay tu baomoi nua vi da co nguon rieng chinh xac hon (script
@@ -68,6 +87,11 @@ BO_QUA_SLUG = {
     "vtvcab18-the-thao-tin-tuc-hd",
     "vtvcab16-bong-da-tv",
     "phuthotv-ptv-hd",         # PHU THO chuyen sang TV360 (id 77)
+    # Trung voi nguon khac (vtv.vn / TV360) — bo han, khong lam du phong:
+    "vtv1-hd",
+    "vtv2-hd",
+    "vtv3-hd",
+    "onsports",                # "OnSports+" de khop nham vao ON SPORTS (817)
 }
 
 
